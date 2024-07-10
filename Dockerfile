@@ -1,49 +1,47 @@
 FROM ubuntu:20.04
 
 ## preparing the ubuntu for the runner resources
-ARG RUNNER_VERSION="2.315.0"
-ARG CHANNEL=stable
-ARG DEBIAN_FRONTEND=noninteractive
-ARG DOCKER_VERSION=24.0.7
-ARG DOCKER_COMPOSE_VERSION=v2.23.0
-ARG TARGETPLATFORM
-ARG DOCKER_GROUP_GID=121
-ARG RUNNER_USER_UID=1001 
+ARG RUNNER_VERSION="2.317.0"
 
-# adding docker user
-RUN apt update -y && apt upgrade -y && useradd -m docker 
 
 # add build dependencies
-RUN apt install -y curl gpg apt-transport-https ca-certificates software-properties-common
+RUN apt update && apt install -y curl gpg apt-transport-https ca-certificates software-properties-common
 # Install Docker GPG keys
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 
 # Add the Docker repository to Apt sources
 RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-#installing docker
-RUN apt update && apt install -y --no-install-recommends \
-    curl jq build-essential libssl-dev libffi-dev python3 python3-venv python3-dev python3-pip docker-ce \
-        docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin  
+RUN apt update && apt install -y docker-ce-cli sudo jq
 
-RUN usermod -aG docker docker && newgrp docker
+RUN useradd -m github && \
+  usermod -aG sudo github && \
+  echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN groupadd docker && usermod -aG docker github && newgrp docker
 
-# download and untar runner software
-RUN cd /home/docker && mkdir actions-runner && cd actions-runner \
-    && curl -o actions-runner-linux-x64-2.315.0.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
+
+# # download and untar runner software
+RUN cd /home/github && mkdir actions-runner && cd actions-runner \
+    && curl -o actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz -L https://github.com/actions/runner/releases/download/v${RUNNER_VERSION}/actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz \
     && tar xzf ./actions-runner-linux-x64-${RUNNER_VERSION}.tar.gz
 
-# changing ownership of home directory & installing dependencies
-RUN chown -R docker ~docker && /home/docker/actions-runner/bin/installdependencies.sh
+# # changing ownership of home directory & installing dependencies
+RUN sudo chown -R github /home/github/actions-runner && sudo /home/github/actions-runner/bin/installdependencies.sh
+
+WORKDIR /home/github/actions-runner
 
 COPY ./runnerfiles/start.sh ./start.sh
 
-RUN touch /var/run/docker.sock && chown docker:docker /var/run/docker.sock
+RUN sudo chmod +x ./start.sh 
+RUN sed -i -e 's/\r$//' ./start.sh
 
 
-RUN chmod +x start.sh 
 
-RUN groupmod -g 1002 docker
-USER docker
 
-ENTRYPOINT ["./start.sh"]
+USER github
+RUN sudo usermod -aG docker github && newgrp docker
+
+
+# CMD ["tail", "-f", "/dev/null"]
+
+ENTRYPOINT ["/home/github/actions-runner/start.sh"]

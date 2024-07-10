@@ -1,19 +1,24 @@
 services:
   runner:
-    image: landscapedatacommons/actions-runner:1.0.1
-    restart: always
-    environment:
-      REPO: /run/secrets/repo 
-      TOKEN: /run/secrets/token
+    image: landscapedatacommons/jornada-runner:1.0.4
+    build:
+      dockerfile: Dockerfile
+      context: .
+      secrets:
+        - repo
+        - token
+    # restart: always
     secrets:
-      - repo
-      - token
+        - repo
+        - token
+    environment:
+      - DOCKER_HOST=unix:///var/run/docker.sock
     volumes:
-      - //var/run/docker.sock:/var/run/docker.sock
+      - docker_sock_vol:/var/run
+    
     deploy:
       mode: replicated 
       replicas: 3
-      #
       resources:
         limits: 
           cpus: '0.35'
@@ -21,9 +26,24 @@ services:
         reservations:
           cpus: '0.25'
           memory: 128M
+
+# usable socket that is not the host machine
+  sidecar:
+    image: docker:dind
+    command: []
+    depends_on:
+      - runner
+    privileged: true
+    volumes:
+      - docker_sock_vol:/var/run 
+volumes:
+  docker_sock_vol:
+
 secrets:
   repo:
-    file: repo.txt 
+    file: ./repo.txt 
+    # external: true
   token:
-    file: token.txt
+    file: ./token.txt
+    # external: true
       

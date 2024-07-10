@@ -1,10 +1,16 @@
 #!/bin/bash
-# add these when running the container
-REPO=$REPO
-ACCESS_TOKEN=$TOKEN 
+echo "waiting for volumes to set up before allowing ownership of docker.sock.."
 
+# sleep 10
+# sudo chown github:github /var/run/docker.sock
+echo "done!"
+# add these when running the container
+REPO=$TARGETREPO
+ACCESS_TOKEN=$TOKEN
 
 # standard post request for runner token against the github's api using an correctly configured access_token 
+
+# pat requires: admin read/write 
 REG_TOKEN=$(curl -L \
  -X POST \
  -H "Accept: application/vnd.github+json" \
@@ -13,7 +19,18 @@ REG_TOKEN=$(curl -L \
   https://api.github.com/repos/${REPO}/actions/runners/registration-token |
 jq .token --raw-output)
 
-cd /home/docker/actions-runner
+## organization token request
+
+# pat requires: self-hosted runner org permission read/write
+
+# curl -L \
+#   -X POST \
+#   -H "Accept: application/vnd.github+json" \
+#   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+#   -H "X-GitHub-Api-Version: 2022-11-28" \
+#   https://api.github.com/orgs/${REPO}/actions/runners/registration-token
+
+cd /home/github/actions-runner
 
 ./config.sh --url https://github.com/${REPO} --token ${REG_TOKEN}
 
