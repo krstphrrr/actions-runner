@@ -13,6 +13,8 @@ services:
     environment:
       - DOCKER_HOST=tcp://sidecar:2375
       - TARGETREPO=Landscape-Data-Commons
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/client
       # - TOKEN=/run/secrets/ldc_pat
     secrets:
       - source: ldc_pat
@@ -20,6 +22,8 @@ services:
         uid: '1001'  
         gid: '1001'
         mode: 0400
+    volumes:
+      - certs:/certs:ro
 
     #volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/

@@ -4,7 +4,7 @@ services:
     user: root
     # image: docker:dind-rootless
     image: landscapedatacommons/jornada-dind:1.0.0
-    build: 
+    build:
       dockerfile: dind.Dockerfile
       context: .
     logging:
@@ -16,25 +16,14 @@ services:
     entrypoint: "/usr/local/bin/entrypoint.sh"
     privileged: true
     restart: always
-    #cap_add:
-    # - ALL
-     # - NET_ADMIN
-     # - SYS_ADMIN
-     # - DAC_OVERRIDE
-     # - SYS_MODULE
-     # - SYS_RAWIO
-     # - FOWNER
-     # - MKNOD
-    #security_opt:
-    #  - apparmor=unconfined  # Disables AppArmor restrictions
-    #  - label:disable        # Disables SELinux enforcement
-    #tmpfs:
-    #  - /var/lib/docker/tmp  
     environment:
-      - DOCKER_TLS_CERTDIR=   # Set this to empty to disable TLS
-      - DOCKER_TLS_VERIFY=0   # Explicitly disable TLS verification
-      # - DOCKER_TLS_VERIFY=1
-      # # - tlscert=/certs/ca/cert.pem --tlskey=/certs/ca/key.pem --tlscacert=/certs/client/ca.pem
+      - DOCKER_TLS_CERTDIR=/certs
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/client
+    volumes:
+      - certs:/certs
+      #- DOCKER_DAEMON_ARGS="--tls=false --host=tcp://0.0.0.0:2375"
+
 
     #volumes:
 
@@ -49,7 +38,10 @@ services:
     # external: true
   #dind-certs-client:
     # external: true
-
+volumes:
+  certs:
+    name: runner-certs
+    
 networks:
   runner-network:
     name: runner-network

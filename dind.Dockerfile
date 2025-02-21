@@ -1,5 +1,12 @@
 FROM docker:dind-rootless
 USER root
+
+# Install OpenSSL for certificate generation
+RUN apk add --no-cache openssl
+
+# Create certs directory
+RUN mkdir -p /certs/client /certs/server && \
+    chmod -R 700 /certs
 RUN adduser -D -g '' -u 1001 github 
 
 RUN adduser github docker 

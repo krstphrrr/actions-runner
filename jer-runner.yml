@@ -15,6 +15,8 @@ services:
 
       # - DOCKER_CERT_PATH=/certs/client
       - DOCKER_HOST=tcp://sidecar:2375
+      - DOCKER_TLS_VERIFY=1
+      - DOCKER_CERT_PATH=/certs/client
       # - DOCKER_MACHINE_NAME=runner
       # - DOCKER_HOST=unix:///var/run/docker.sock
       - TARGETREPO=JornadaExperimentalRange
@@ -31,6 +33,8 @@ services:
       # - actions-runner_sidecar_sock_vol:/var/run/:rw
       #- dind-certs-client:/certs/client:ro
       # - dind-certs-ca:
+    volumes:
+      - certs:/certs:ro
     
     deploy:
       mode: replicated 
@@ -47,6 +51,10 @@ services:
 secrets:
   jer_pat:
     # file: ./jer_pat.txt
+    external: true
+volumes:
+  certs:
+    name: runner-certs
     external: true
   
  
