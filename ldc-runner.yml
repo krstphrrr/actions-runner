@@ -13,9 +13,9 @@ services:
     environment:
       - DOCKER_HOST=tcp://sidecar:2375
       - TARGETREPO=Landscape-Data-Commons
-      - TOKEN=${LDC_PAT}
-    env_file:
-      - .env
+      - TOKEN=/run/secrets/ldc_pat
+    secrets:
+      - ldc_pat
 
     #volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/
@@ -35,6 +35,10 @@ services:
     networks:
      - runner-network
  
+secrets:
+  ldc_pat:
+    external: true
+  # file: ./ldc_pat.txt
 #volumes:
   # actions-runner_sidecar_sock_vol:
   #   external: true

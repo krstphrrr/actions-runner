@@ -48,10 +48,14 @@ logger -t reset-runners "Building runner images..."
 /usr/bin/docker image build -t landscapedatacommons/jornada-runner:1.0.7 -f /home/elrey/actions-runner/Dockerfile /home/elrey/actions-runner
 check_command "runner image build"
 
-# Create network
-logger -t reset-runners "Creating network..."
-/usr/bin/docker network create -d overlay --attachable runner-network
-check_command "network creation"
+# Create network if it doesn't exist
+logger -t reset-runners "Checking/Creating network..."
+if ! /usr/bin/docker network ls | grep -q "runner-network"; then
+    /usr/bin/docker network create -d overlay --attachable runner-network
+    check_command "network creation"
+else
+    logger -t reset-runners "Network runner-network already exists"
+fi
 
 # Start sidecar
 logger -t reset-runners "Starting sidecar..."

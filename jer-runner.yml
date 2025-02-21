@@ -18,11 +18,11 @@ services:
       # - DOCKER_MACHINE_NAME=runner
       # - DOCKER_HOST=unix:///var/run/docker.sock
       - TARGETREPO=JornadaExperimentalRange
-      - TOKEN=${JER_PAT}
+      - TOKEN=/run/secrets/jer_pat
       # - DOCKER_TLS_CERTDIR=/certs/
       #- DOCKER_TLS_VERIFY=0
-    env_file:
-      - .env
+    secrets:
+      - jer_pat
    # volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/:rw
       #- dind-certs-client:/certs/client:ro
@@ -40,7 +40,10 @@ services:
           memory: 128M
     networks:
      - runner-network
-
+secrets:
+  jer_pat:
+    # file: ./jer_pat.txt
+    external: true
   
  
 #volumes:
