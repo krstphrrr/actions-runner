@@ -1,9 +1,9 @@
 services:
   runner:
     # user: github:docker
-    image: landscapedatacommons/jornada-runner:1.0.7
+    image: landscapedatacommons/jornada-runner-jer:1.0.0
     build:
-      dockerfile: Dockerfile
+      dockerfile: jer.Dockerfile
       context: .
     logging:
       driver: "json-file"
@@ -18,7 +18,7 @@ services:
       # - DOCKER_MACHINE_NAME=runner
       # - DOCKER_HOST=unix:///var/run/docker.sock
       - TARGETREPO=JornadaExperimentalRange
-      - TOKEN=/run/secrets/jer_pat
+      # - TOKEN=/run/secrets/jer_pat
       # - DOCKER_TLS_CERTDIR=/certs/
       #- DOCKER_TLS_VERIFY=0
     secrets:

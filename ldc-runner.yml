@@ -1,8 +1,8 @@
 services:
   runner:
-    image: landscapedatacommons/jornada-runner:1.0.7
+    image: landscapedatacommons/jornada-runner-ldc:1.0.0
     build:
-      dockerfile: Dockerfile
+      dockerfile: ldc.Dockerfile
       context: .
     logging:
       driver: "json-file"
@@ -13,7 +13,7 @@ services:
     environment:
       - DOCKER_HOST=tcp://sidecar:2375
       - TARGETREPO=Landscape-Data-Commons
-      - TOKEN=/run/secrets/ldc_pat
+      # - TOKEN=/run/secrets/ldc_pat
     secrets:
       - source: ldc_pat
         target: ldc_pat
