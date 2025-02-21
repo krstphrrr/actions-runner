@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 
 ## preparing the ubuntu for the runner resources
-ARG RUNNER_VERSION="2.320.0"
+ARG RUNNER_VERSION="2.322.0"
 
 
 # add build dependencies
