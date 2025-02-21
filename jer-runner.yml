@@ -24,6 +24,8 @@ services:
     secrets:
       - source: jer_pat
         target: jer_pat
+        uid: '1001'  
+        gid: '1001' 
         mode: 0400
    # volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/:rw

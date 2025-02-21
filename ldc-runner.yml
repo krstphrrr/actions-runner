@@ -17,6 +17,8 @@ services:
     secrets:
       - source: ldc_pat
         target: ldc_pat
+        uid: '1001'  
+        gid: '1001'
         mode: 0400
 
     #volumes:
