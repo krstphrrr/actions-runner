@@ -1,0 +1,47 @@
+services:
+  runner:
+    image: landscapedatacommons/jornada-runner:1.0.7
+    build:
+      dockerfile: Dockerfile
+      context: .
+    logging:
+      driver: "json-file"
+      options:
+        max-file: 3
+        max-size: 10m
+    restart: always
+    environment:
+      - DOCKER_HOST=tcp://sidecar:2375
+      - TARGETREPO=Landscape-Data-Commons
+      - TOKEN=${LDC_PAT}
+    env_file:
+      - .env
+
+    #volumes:
+      # - actions-runner_sidecar_sock_vol:/var/run/
+     # - dind-certs-client:/certs/client:ro
+    
+    deploy:
+      mode: replicated 
+      replicas: 3
+      resources:
+        limits: 
+          cpus: '0.35'
+          memory: 300M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+
+    networks:
+     - runner-network
+ 
+#volumes:
+  # actions-runner_sidecar_sock_vol:
+  #   external: true
+  #   name: actions-runner_sidecar_sock_vol
+  #dind-certs-client:
+   # external: true
+networks:
+  runner-network:
+    name: runner-network
+    external: true

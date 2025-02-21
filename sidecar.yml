@@ -1,0 +1,55 @@
+
+services:
+  sidecar:
+    user: root
+    # image: docker:dind-rootless
+    image: landscapedatacommons/jornada-dind:1.0.0
+    build: 
+      dockerfile: dind.Dockerfile
+      context: .
+    logging:
+      driver: "json-file"
+      options:
+        max-file: 3
+        max-size: 10m
+    init: true
+    entrypoint: "/usr/local/bin/entrypoint.sh"
+    privileged: true
+    restart: always
+    #cap_add:
+    # - ALL
+     # - NET_ADMIN
+     # - SYS_ADMIN
+     # - DAC_OVERRIDE
+     # - SYS_MODULE
+     # - SYS_RAWIO
+     # - FOWNER
+     # - MKNOD
+    #security_opt:
+    #  - apparmor=unconfined  # Disables AppArmor restrictions
+    #  - label:disable        # Disables SELinux enforcement
+    #tmpfs:
+    #  - /var/lib/docker/tmp  
+    environment:
+      - DOCKER_TLS_CERTDIR=/certs
+      # - DOCKER_TLS_VERIFY=1
+      # # - tlscert=/certs/ca/cert.pem --tlskey=/certs/ca/key.pem --tlscacert=/certs/client/ca.pem
+
+    #volumes:
+
+     # - dind-certs-client:/certs/client
+    networks:
+      - runner-network
+    # network_mode: "host"
+#volumes:
+  # actions-runner_sidecar_sock_vol:
+  #   external: true
+  #dind-certs-ca:
+    # external: true
+  #dind-certs-client:
+    # external: true
+
+networks:
+  runner-network:
+    name: runner-network
+    external: true

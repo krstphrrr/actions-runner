@@ -1,10 +1,12 @@
 #!/bin/bash
-echo "waiting for volumes to set up before allowing ownership of docker.sock.."
+#echo "waiting for volumes to set up before allowing ownership of docker.sock.."
 
 # sleep 10
 # sudo chown github:github /var/run/docker.sock
-echo "done!"
+#echo "done!"
 # add these when running the container
+# alias docker='sudo docker '
+
 REPO=$TARGETREPO
 ACCESS_TOKEN=$TOKEN
 
@@ -16,7 +18,7 @@ REG_TOKEN=$(curl -L \
  -H "Accept: application/vnd.github+json" \
  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
  -H "X-GitHub-Api-Version: 2022-11-28" \
-  https://api.github.com/repos/${REPO}/actions/runners/registration-token |
+ https://api.github.com/orgs/${REPO}/actions/runners/registration-token |
 jq .token --raw-output)
 
 ## organization token request
