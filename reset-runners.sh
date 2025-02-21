@@ -44,9 +44,14 @@ logger -t reset-runners "Pruning system..."
 check_command "system prune"
 
 # Build runner images
-logger -t reset-runners "Building runner images..."
-/usr/bin/docker image build -t landscapedatacommons/jornada-runner:1.0.7 -f /home/elrey/actions-runner/Dockerfile /home/elrey/actions-runner
-check_command "runner image build"
+logger -t reset-runners "Building jer runner image..."
+/usr/bin/docker image build -t landscapedatacommons/jornada-runner-jer:1.0.0 -f /home/elrey/actions-runner/jer.Dockerfile /home/elrey/actions-runner
+check_command "jer runner image build"
+
+# Build runner images
+logger -t reset-runners "Building ldc runner images..."
+/usr/bin/docker image build -t landscapedatacommons/jornada-runner-ldc:1.0.0 -f /home/elrey/actions-runner/ldc.Dockerfile /home/elrey/actions-runner
+check_command "ldc runner image build"
 
 # Create network if it doesn't exist
 logger -t reset-runners "Checking/Creating network..."
