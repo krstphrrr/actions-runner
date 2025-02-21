@@ -15,7 +15,9 @@ services:
       - TARGETREPO=Landscape-Data-Commons
       - TOKEN=/run/secrets/ldc_pat
     secrets:
-      - ldc_pat
+      - source: ldc_pat
+        target: ldc_pat
+        mode: 0400
 
     #volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/

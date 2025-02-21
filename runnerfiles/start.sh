@@ -7,6 +7,15 @@
 # add these when running the container
 # alias docker='sudo docker '
 
+# Read the GitHub PAT from the secrets file
+if [ -f "$GITHUB_PAT_FILE" ]; then
+    TOKEN=$(cat $GITHUB_PAT_FILE)
+else
+    echo "Error: GitHub PAT secret file not found at $GITHUB_PAT_FILE"
+    exit 1
+fi
+
+
 REPO=$TARGETREPO
 ACCESS_TOKEN=$TOKEN
 

@@ -22,7 +22,9 @@ services:
       # - DOCKER_TLS_CERTDIR=/certs/
       #- DOCKER_TLS_VERIFY=0
     secrets:
-      - jer_pat
+      - source: jer_pat
+        target: jer_pat
+        mode: 0400
    # volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/:rw
       #- dind-certs-client:/certs/client:ro

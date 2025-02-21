@@ -50,6 +50,7 @@ WORKDIR /home/github/actions-runner
 
 COPY ./runnerfiles/start.sh ./start.sh
 
+ENV GITHUB_PAT_FILE=/run/secrets/ldc_pat
 
 RUN chmod +x ./start.sh 
 RUN sed -i -e 's/\r$//' ./start.sh
