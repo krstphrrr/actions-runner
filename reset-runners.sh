@@ -35,7 +35,7 @@ sleep 30
 
 # Bring down sidecar
 logger -t reset-runners "Stopping sidecar..."
-/usr/bin/docker compose -c /home/elrey/actions-runner/sidecar.yml down
+/usr/bin/docker compose -f /home/elrey/actions-runner/sidecar.yml down
 check_command "sidecar shutdown"
 
 # System prune
@@ -50,7 +50,7 @@ check_command "network creation"
 
 # Start sidecar
 logger -t reset-runners "Starting sidecar..."
-/usr/bin/docker compose -c /home/elrey/actions-runner/sidecar.yml up -d
+/usr/bin/docker compose -f /home/elrey/actions-runner/sidecar.yml up -d
 check_command "sidecar startup"
 
 # Wait for sidecar
