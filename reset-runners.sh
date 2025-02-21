@@ -43,6 +43,11 @@ logger -t reset-runners "Pruning system..."
 /usr/bin/docker system prune -a -f --volumes
 check_command "system prune"
 
+# Build runner images
+logger -t reset-runners "Building runner images..."
+/usr/bin/docker image build -t landscapedatacommons/jornada-runner:1.0.7 -f /home/elrey/actions-runner/Dockerfile /home/elrey/actions-runner
+check_command "runner image build"
+
 # Create network
 logger -t reset-runners "Creating network..."
 /usr/bin/docker network create -d overlay --attachable runner-network
