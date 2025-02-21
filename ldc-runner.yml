@@ -46,6 +46,11 @@ services:
 secrets:
   ldc_pat:
     external: true
+volumes:
+  certs:
+    name: runner-certs
+    external: true
+  
   # file: ./ldc_pat.txt
 #volumes:
   # actions-runner_sidecar_sock_vol:
