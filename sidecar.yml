@@ -31,7 +31,8 @@ services:
     #tmpfs:
     #  - /var/lib/docker/tmp  
     environment:
-      - DOCKER_TLS_CERTDIR=/certs
+      - DOCKER_TLS_CERTDIR=   # Set this to empty to disable TLS
+      - DOCKER_TLS_VERIFY=0   # Explicitly disable TLS verification
       # - DOCKER_TLS_VERIFY=1
       # # - tlscert=/certs/ca/cert.pem --tlskey=/certs/ca/key.pem --tlscacert=/certs/client/ca.pem
 
