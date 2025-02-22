@@ -23,13 +23,19 @@ openssl x509 -req -days 365 -sha256 -in /certs/client/client.csr -CA /certs/ca.p
 # Copy CA cert to client directory
 cp /certs/ca.pem /certs/client/ca.pem
 
-# Set proper permissions
-chmod 0444 /certs/ca.pem
-chmod 0444 /certs/client/ca.pem
-chmod -R 0400 /certs/server/server-key.pem
-chmod -R 0444 /certs/server/server-cert.pem
-chmod -R 0400 /certs/client/key.pem
-chmod -R 0444 /certs/client/cert.pem
+# Set proper permissions and ownership
+chmod -R 755 /certs
+chmod 444 /certs/ca.pem
+chmod 444 /certs/client/ca.pem
+chmod 400 /certs/server/server-key.pem
+chmod 444 /certs/server/server-cert.pem
+chmod 400 /certs/client/key.pem
+chmod 444 /certs/client/cert.pem
+
+# Ensure proper ownership (github user has UID 1001)
+chown -R 1001:1001 /certs/client
+chown -R root:root /certs/server
+chown root:root /certs/ca.pem
 
 # Start dockerd with TLS verification
 exec dockerd \
