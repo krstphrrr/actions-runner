@@ -1,5 +1,15 @@
 #!/bin/sh
 
+
+# Add nameservers to /etc/resolv.conf
+cat > /etc/resolv.conf << EOF
+nameserver 192.168.177.52
+nameserver 192.168.177.1
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+nameserver 1.1.1.1
+EOF
+
 # Create necessary directories
 mkdir -p /certs/server
 mkdir -p /certs/client
