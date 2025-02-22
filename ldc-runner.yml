@@ -11,7 +11,7 @@ services:
         max-size: 10m
     restart: always
     environment:
-      - DOCKER_HOST=tcp://sidecar:2375
+      - DOCKER_HOST=tcp://sidecar:2376
       - TARGETREPO=Landscape-Data-Commons
       - DOCKER_TLS_VERIFY=1
       - DOCKER_CERT_PATH=/certs/client

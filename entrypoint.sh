@@ -34,6 +34,7 @@ chmod 444 /certs/client/cert.pem
 
 # Ensure proper ownership (github user has UID 1001)
 chown -R 1001:1001 /certs/client
+chmod -R g+r /certs/client  # Add group read permissions
 chown -R root:root /certs/server
 chown root:root /certs/ca.pem
 
