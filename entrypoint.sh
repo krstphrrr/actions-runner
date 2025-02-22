@@ -20,8 +20,12 @@ openssl req -subj "/CN=docker-client" -new -key /certs/client/key.pem -out /cert
 echo "extendedKeyUsage = clientAuth" > /certs/client/extfile.cnf
 openssl x509 -req -days 365 -sha256 -in /certs/client/client.csr -CA /certs/ca.pem -CAkey /certs/ca-key.pem -CAcreateserial -out /certs/client/cert.pem -extfile /certs/client/extfile.cnf -passin pass:unsecure
 
+# Copy CA cert to client directory
+cp /certs/ca.pem /certs/client/ca.pem
+
 # Set proper permissions
 chmod 0444 /certs/ca.pem
+chmod 0444 /certs/client/ca.pem
 chmod -R 0400 /certs/server/server-key.pem
 chmod -R 0444 /certs/server/server-cert.pem
 chmod -R 0400 /certs/client/key.pem
