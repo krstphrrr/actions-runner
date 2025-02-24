@@ -29,6 +29,21 @@ logger -t reset-runners "Removing stacks..."
 /usr/bin/docker stack rm jer_runner
 /usr/bin/docker stack rm ldc_runner
 
+logger -t reset-runners "Starting runner reset sequence..."
+
+# Git operations
+logger -t reset-runners "Performing git operations..."
+cd /home/elrey/actions-runner
+git stash
+check_command "git stash"
+git pull
+check_command "git pull"
+
+# Ensure script is executable
+logger -t reset-runners "Setting script permissions..."
+chmod +x /home/elrey/actions-runner/reset-runners.sh
+check_command "chmod script"
+
 # Wait for stack removal
 logger -t reset-runners "Waiting for stacks to be removed..."
 sleep 30
@@ -42,6 +57,11 @@ check_command "sidecar shutdown"
 logger -t reset-runners "Pruning system..."
 /usr/bin/docker system prune -a -f --volumes
 check_command "system prune"
+
+# Building the sidecar image
+logger -t reset-runners "Building sidecar image..."
+/usr/bin/docker compose -f /home/elrey/actions-runner/sidecar.yml build
+check_command "sidecar image build"
 
 # Build runner images
 logger -t reset-runners "Building jer runner image..."
