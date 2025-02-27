@@ -34,6 +34,8 @@ logger -t reset-runners "Starting runner reset sequence..."
 # Git operations
 logger -t reset-runners "Performing git operations..."
 cd /home/elrey/actions-runner
+git config --global --add safe.directory /home/elrey/actions-runner
+check_command "git config safe.directory"
 git stash
 check_command "git stash"
 git pull
@@ -100,3 +102,10 @@ check_command "JER runner deployment"
 check_command "LDC runner deployment"
 
 logger -t reset-runners "Reset sequence completed successfully"
+
+# Re-apply stashed changes if needed
+if git stash list | grep -q "stash@{0}"; then
+    logger -t reset-runners "Re-applying stashed changes..."
+    git stash pop
+    check_command "git stash pop"
+fi
