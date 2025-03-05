@@ -1,6 +1,5 @@
 services:
   runner:
-    # user: github:docker
     image: landscapedatacommons/jornada-runner-jer:1.0.0
     build:
       dockerfile: jer.Dockerfile
@@ -13,28 +12,20 @@ services:
     restart: always
     environment:
 
-      # - DOCKER_CERT_PATH=/certs/client
       - DOCKER_HOST=tcp://sidecar:2376
       - DOCKER_TLS_VERIFY=1
       - DOCKER_CERT_PATH=/certs/client
-      # - DOCKER_MACHINE_NAME=runner
-      # - DOCKER_HOST=unix:///var/run/docker.sock
       - TARGETREPO=JornadaExperimentalRange
-      # - TOKEN=/run/secrets/jer_pat
-      # - DOCKER_TLS_CERTDIR=/certs/
-      #- DOCKER_TLS_VERIFY=0
+
     secrets:
       - source: jer_pat
         target: jer_pat
         uid: '1001'  
         gid: '1001' 
         mode: 0400
-   # volumes:
-      # - actions-runner_sidecar_sock_vol:/var/run/:rw
-      #- dind-certs-client:/certs/client:ro
-      # - dind-certs-ca:
     volumes:
       - certs:/certs:ro
+      - ./tmp:/tmp
     
     deploy:
       mode: replicated 
@@ -50,7 +41,7 @@ services:
      - runner-network
 secrets:
   jer_pat:
-    # file: ./jer_pat.txt
+
     external: true
 volumes:
   certs:

@@ -24,6 +24,7 @@ services:
         mode: 0400
     volumes:
       - certs:/certs:ro
+      - ./tmp:/tmp
 
     #volumes:
       # - actions-runner_sidecar_sock_vol:/var/run/
